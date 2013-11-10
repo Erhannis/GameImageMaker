@@ -66,7 +66,7 @@ public class GameImageMaker {
      */
     public static void main(String[] args) {
         Random rand = new Random();
-        switch (2) {
+        switch (3) {
             case 0:
             {
                 int cols = 100;
@@ -91,8 +91,8 @@ public class GameImageMaker {
             }
             case 2:
             {
-                int cCols = 500;
-                int cRows = 500;
+                int cCols = 1000;
+                int cRows = 1000;
                 Canvas canvas = new Canvas(cCols, cRows);
                 //canvas.drawFlatBackground(0x00, 0x20, 0x50, 0xFF);
                 
@@ -109,6 +109,34 @@ public class GameImageMaker {
                 GIMUtils.inputStreamToFile(is, "canvas-motes.png");
                 break;
             }
+            case 3:
+            {
+                int ccols = 1000;
+                int crows = 1000;
+                Canvas canvas = new Canvas(ccols, crows);
+
+                int dcols = 100;
+                int drows = 100;
+                Drop drop = new Drop(dcols, drows);
+                drop.drawBase((int) 0x10, (int) 0xD0, (int) 0x10);
+                drop.setRandBlue();
+                drop.addRing();
+                
+                canvas.setEntity(drop, (ccols / 2) - (dcols / 2), (crows / 2) - (drows / 2));
+
+                int motes = 50;
+                int maxMoteSize = 10;
+                for (int i = 0; i < motes; i++) {
+                    int cols = rand.nextInt(maxMoteSize) + 1;
+                    int rows = cols;
+                    Mote mote = new Mote(cols, rows);
+                    mote.drawBase(rand.nextInt(0x100), rand.nextInt(0x100), rand.nextInt(0x100));
+                    canvas.setEntity(mote, rand.nextInt(crows), rand.nextInt(ccols));
+                }
+                InputStream is = canvas.generate();
+                GIMUtils.inputStreamToFile(is, "canvas-motes-w_drop.png");
+                break;
+}
         }
     }
 }

@@ -73,14 +73,6 @@ public class GameImageMaker {
         int rows = 100;
         Random rand = new Random();
         InputStream is = drop.generateDrop((byte)0x10, (byte)0xD0, (byte)0x10, cols, rows);
-        //InputStream is = gim.generateTest((byte)0x10, (byte)0xF0, (byte)0x10, cols, rows);
-        //InputStream is = gim.generateTest(cols, rows);
-        try {
-            FileOutputStream fos = new FileOutputStream("drop-green.png");
-            MeUtils.pipeInputStreamToOutputStream(is, fos);
-            fos.close();
-        } catch (IOException ex) {
-            Logger.getLogger(GameImageMaker.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        GIMUtils.inputStreamToFile(is, "drop-green.png");
     }
 }

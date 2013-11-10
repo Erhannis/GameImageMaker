@@ -8,10 +8,12 @@ import ar.com.hjg.pngj.ImageInfo;
 import ar.com.hjg.pngj.ImageLineHelper;
 import ar.com.hjg.pngj.ImageLineInt;
 import ar.com.hjg.pngj.PngWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mathnstuff.MeUtils;
 import mathnstuff.utils.QueueStream;
 
 /**
@@ -47,5 +49,15 @@ public class GIMUtils {
             Logger.getLogger(GameImageMaker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return qis;
+    }
+    
+    public static void inputStreamToFile(InputStream is, String filename) {
+        try {
+            FileOutputStream fos = new FileOutputStream(filename);
+            MeUtils.pipeInputStreamToOutputStream(is, fos);
+            fos.close();
+        } catch (IOException ex) {
+            Logger.getLogger(GameImageMaker.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

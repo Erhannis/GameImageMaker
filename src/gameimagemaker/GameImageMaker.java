@@ -4,9 +4,11 @@
  */
 package gameimagemaker;
 
+import gameimagemaker.entities.Canvas;
 import gameimagemaker.entities.Drop;
 import gameimagemaker.entities.Mote;
 import java.io.InputStream;
+import java.util.Random;
 
 /**
  *
@@ -63,7 +65,8 @@ public class GameImageMaker {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        switch (1) {
+        Random rand = new Random();
+        switch (2) {
             case 0:
             {
                 int cols = 100;
@@ -84,6 +87,26 @@ public class GameImageMaker {
                 mote.drawBase((int) 0x10, (int) 0xD0, (int) 0x10);
                 InputStream is = mote.generate();
                 GIMUtils.inputStreamToFile(is, "mote-green.png");
+                break;
+            }
+            case 2:
+            {
+                int cCols = 500;
+                int cRows = 500;
+                Canvas canvas = new Canvas(cCols, cRows);
+                //canvas.drawFlatBackground(0x00, 0x20, 0x50, 0xFF);
+                
+                int motes = 20;
+                int maxMoteSize = 30;
+                for (int i = 0; i < motes; i++) {
+                    int cols = rand.nextInt(30) + 1;
+                    int rows = cols;
+                    Mote mote = new Mote(cols, rows);
+                    mote.drawBase(rand.nextInt(0x100), rand.nextInt(0x100), rand.nextInt(0x100));
+                    canvas.setEntity(mote, rand.nextInt(cRows), rand.nextInt(cCols));
+                }
+                InputStream is = canvas.generate();
+                GIMUtils.inputStreamToFile(is, "canvas-motes.png");
                 break;
             }
         }

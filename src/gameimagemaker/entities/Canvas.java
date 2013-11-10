@@ -13,6 +13,17 @@ public class Canvas extends Entity {
         super(cols, rows);
     }
     
+    public void drawFlatBackground(int r, int g, int b, int a) {
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
+                buf[y][x][0] = r;
+                buf[y][x][1] = g;
+                buf[y][x][2] = b;
+                buf[y][x][3] = a;
+            }
+        }
+    }
+    
     public void drawEntity(Entity e, int x, int y) {
         
     }

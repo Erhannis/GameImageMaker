@@ -13,15 +13,9 @@ import mathnstuff.MeMath;
  *
  * @author mewer
  */
-public class Drop {
-    public int cols = 0;
-    public int rows = 0;
-    public int[][][] buf = null;
-    
+public class Drop extends Entity {    
     public Drop(int cols, int rows) {
-        this.cols = cols;
-        this.rows = rows;
-        buf = new int[rows][cols][4];
+        super(cols, rows);
     }
     
     public void drawBase(int r, int g, int b) {
@@ -69,9 +63,5 @@ public class Drop {
                 }
             }
         }
-    }
-    
-    public InputStream generate() {
-        return GIMUtils.arrayToPng(buf, cols, rows);
     }
 }

@@ -5,13 +5,8 @@
 package gameimagemaker;
 
 import gameimagemaker.entities.Drop;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import gameimagemaker.entities.Mote;
 import java.io.InputStream;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import mathnstuff.MeUtils;
 
 /**
  *
@@ -68,13 +63,29 @@ public class GameImageMaker {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        int cols = 100;
-        int rows = 100;
-        Drop drop = new Drop(cols, rows);
-        drop.drawBase((int)0x10, (int)0xD0, (int)0x10);
-        drop.setRandBlue();
-        drop.addRing();
-        InputStream is = drop.generate();
-        GIMUtils.inputStreamToFile(is, "drop-green.png");
+        switch (1) {
+            case 0:
+            {
+                int cols = 100;
+                int rows = 100;
+                Drop drop = new Drop(cols, rows);
+                drop.drawBase((int) 0x10, (int) 0xD0, (int) 0x10);
+                drop.setRandBlue();
+                drop.addRing();
+                InputStream is = drop.generate();
+                GIMUtils.inputStreamToFile(is, "drop-green.png");
+                break;
+            }
+            case 1:
+            {
+                int cols = 10;
+                int rows = 10;
+                Mote mote = new Mote(cols, rows);
+                mote.drawBase((int) 0x10, (int) 0xD0, (int) 0x10);
+                InputStream is = mote.generate();
+                GIMUtils.inputStreamToFile(is, "mote-green.png");
+                break;
+            }
+        }
     }
 }

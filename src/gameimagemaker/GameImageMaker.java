@@ -68,11 +68,13 @@ public class GameImageMaker {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Drop drop = new Drop();
         int cols = 100;
         int rows = 100;
-        Random rand = new Random();
-        InputStream is = drop.generateDrop((byte)0x10, (byte)0xD0, (byte)0x10, cols, rows);
+        Drop drop = new Drop(cols, rows);
+        drop.drawBase((int)0x10, (int)0xD0, (int)0x10);
+        drop.setRandBlue();
+        drop.addRing();
+        InputStream is = drop.generate();
         GIMUtils.inputStreamToFile(is, "drop-green.png");
     }
 }

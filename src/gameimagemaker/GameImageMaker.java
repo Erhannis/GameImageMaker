@@ -4,83 +4,21 @@
  */
 package gameimagemaker;
 
-import ar.com.hjg.pngj.ImageInfo;
-import ar.com.hjg.pngj.ImageLineHelper;
-import ar.com.hjg.pngj.ImageLineInt;
-import ar.com.hjg.pngj.PngWriter;
-import ar.com.hjg.pngj.chunks.PngChunkTextVar;
-import java.awt.Color;
-import java.io.FileNotFoundException;
+import gameimagemaker.entities.Drop;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import mathnstuff.MeMath;
 import mathnstuff.MeUtils;
-import mathnstuff.utils.QueueStream.QueueInputStream;
-import mathnstuff.utils.QueueStream.QueueOutputStream;
 
 /**
  *
  * @author mewer
  */
 public class GameImageMaker {
-    
-    /**
-     * last coordinate is {r,g,b,a}.
-     * @param image
-     * @param cols
-     * @param rows
-     * @return 
-     */
-    public static InputStream arrayToPng(int[][][] image, int cols, int rows) {
-        ImageInfo ii = new ImageInfo(cols, rows, 8, true);
-        QueueInputStream qis = new QueueInputStream();
-        QueueOutputStream qos = qis.dual;
-        PngWriter pw = new PngWriter(qos, ii);
-        ImageLineInt line = new ImageLineInt(ii);
-        
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
-                ImageLineHelper.setPixelRGBA8(line, x, image[y][x][0], image[y][x][1], image[y][x][2], image[y][x][3]);
-            }
-            pw.writeRow(line);
-        }
-        pw.end();
-       
-        try {
-            qos.close();
-        } catch (IOException ex) {
-            Logger.getLogger(GameImageMaker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return qis;
-    }
-    
-    
-    public InputStream generateBlob(byte r, byte g, byte b, int cols, int rows) {
-        int[][][] buf = new int[rows][cols][4];
-        
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
-                double radius = Math.sqrt(MeMath.sqr(x - (cols / 2.0)) + MeMath.sqr(y - (rows / 2.0)));
-                radius /= Math.max(cols / 2.0, rows / 2.0);
-                double alpha = (radius * 0.9) + 0.1;
-                if (radius > 1) {
-                    alpha = 0;
-                }
-                byte a = (byte)(0xFF * alpha);
-                buf[y][x][0] = r;
-                buf[y][x][1] = g;
-                buf[y][x][2] = b;
-                buf[y][x][3] = a;
-            }
-        }
-        
-        return arrayToPng(buf, cols, rows);
-    }
-    
+ /*
     public InputStream generateTest(byte r, byte g, byte b, int cols, int rows) {
         ImageInfo imi = new ImageInfo(cols, rows, 8, true); // 8 bits per channel, no alpha
         // open image for writing to a output stream
@@ -125,20 +63,20 @@ public class GameImageMaker {
         }
         return qis;
     }
-    
+/**/
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        GameImageMaker gim = new GameImageMaker();
+        Drop drop = new Drop();
         int cols = 100;
         int rows = 100;
         Random rand = new Random();
-        InputStream is = gim.generateBlob((byte)0x10, (byte)0xD0, (byte)0x10, cols, rows);
+        InputStream is = drop.generateDrop((byte)0x10, (byte)0xD0, (byte)0x10, cols, rows);
         //InputStream is = gim.generateTest((byte)0x10, (byte)0xF0, (byte)0x10, cols, rows);
         //InputStream is = gim.generateTest(cols, rows);
         try {
-            FileOutputStream fos = new FileOutputStream("blob-pixs.png");
+            FileOutputStream fos = new FileOutputStream("drop-green.png");
             MeUtils.pipeInputStreamToOutputStream(is, fos);
             fos.close();
         } catch (IOException ex) {

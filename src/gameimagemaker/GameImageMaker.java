@@ -66,7 +66,7 @@ public class GameImageMaker {
      */
     public static void main(String[] args) {
         Random rand = new Random();
-        switch (3) {
+        switch (4) {
             case 0:
             {
                 int cols = 100;
@@ -136,7 +136,36 @@ public class GameImageMaker {
                 InputStream is = canvas.generate();
                 GIMUtils.inputStreamToFile(is, "canvas-motes-w_drop.png");
                 break;
-}
+            }
+            case 4:
+            {
+                int ccols = 1000;
+                int crows = 1000;
+                Canvas canvas = new Canvas(ccols, crows);
+
+                int dcols = 100;
+                int drows = 100;
+                Drop drop = new Drop(dcols, drows);
+                drop.drawBase((int) 0x10, (int) 0xD0, (int) 0x10);
+                drop.setRandBlue();
+                drop.addRing();
+                
+                canvas.drawFlatBackground(0x00, 0x20, 0x60, 0xFF);
+                canvas.drawEntity(drop, (ccols / 2) - (dcols / 2), (crows / 2) - (drows / 2));
+
+                int motes = 50;
+                int maxMoteSize = 10;
+                for (int i = 0; i < motes; i++) {
+                    int cols = rand.nextInt(maxMoteSize) + 1;
+                    int rows = cols;
+                    Mote mote = new Mote(cols, rows);
+                    mote.drawBase(rand.nextInt(0x100), rand.nextInt(0x100), rand.nextInt(0x100));
+                    canvas.drawEntity(mote, rand.nextInt(crows), rand.nextInt(ccols));
+                }
+                InputStream is = canvas.generate();
+                GIMUtils.inputStreamToFile(is, "canvas-motes-w_drop.png");
+                break;
+            }
         }
     }
 }

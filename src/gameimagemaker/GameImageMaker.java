@@ -66,7 +66,7 @@ public class GameImageMaker {
      */
     public static void main(String[] args) {
         Random rand = new Random();
-        switch (6) {
+        switch (5) {
             case 0:
             {
                 int cols = 100;
@@ -177,8 +177,14 @@ public class GameImageMaker {
                 int dcols = 100;
                 int drows = 100;
                 Drop drop = new Drop(dcols, drows);
-                drop.drawBase((int) 0x10, (int) 0xD0, (int) 0x10);
-                drop.setRandBlue();
+                drop.drawBase((int) 0x10, (int) 0xF0, (int) 0x10);
+                //drop.drawBase((int) 0x00, (int) 0x00, (int) 0x00);
+                //drop.drawBase((int) 0xF0, (int) 0x10, (int) 0xF0);
+                drop.heightMapBase();
+                drop.deriveNormalMap();
+                //drop.setRandBlue();
+                drop.addReflectionRing();
+                drop.addSheen();
                 drop.addRing();
                 
                 canvas.drawFlatBackground(0x00, 0x20, 0x60, 0xFF);
@@ -216,7 +222,7 @@ public class GameImageMaker {
                 }
                 
                 InputStream is = canvas.generate();
-                GIMUtils.inputStreamToFile(is, "canvas-motes_flurry-w_drop.png");
+                GIMUtils.inputStreamToFile(is, "canvas-motes_flurry-w_drop-w_sheen.png");
                 break;
             }
             case 6:
@@ -286,6 +292,21 @@ public class GameImageMaker {
                 GIMUtils.inputStreamToFile(is, "canvas-motes_flurry-w_drop-right.png");
                 is = canvasR.generate();
                 GIMUtils.inputStreamToFile(is, "canvas-motes_flurry-w_drop-left.png");
+                break;
+            }
+            case 7:
+            {
+                int cols = 100;
+                int rows = 100;
+                Drop drop = new Drop(cols, rows);
+                drop.drawBase((int) 0x10, (int) 0xD0, (int) 0x10);
+                drop.heightMapBase();
+                drop.deriveNormalMap();
+                drop.setRandBlue();
+                drop.addSheen();
+                drop.addRing();
+                InputStream is = drop.generate();
+                GIMUtils.inputStreamToFile(is, "drop-green-w_sheen.png");
                 break;
             }
         }

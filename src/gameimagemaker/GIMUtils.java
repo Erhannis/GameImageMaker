@@ -23,6 +23,9 @@ import mathnstuff.utils.QueueStream;
 public class GIMUtils {
     /**
      * coordinates are y, x, {r,g,b,a}.
+     * Note something very important!  The y-axis goes from the bottom up:
+     * images are vertically flipped!  This is so that I can deal with the
+     * images more like mathematical objects, with the usual directions.
      * @param image
      * @param cols
      * @param rows
@@ -35,7 +38,7 @@ public class GIMUtils {
         PngWriter pw = new PngWriter(qos, ii);
         ImageLineInt line = new ImageLineInt(ii);
         
-        for (int y = 0; y < rows; y++) {
+        for (int y = rows - 1; y >= 0; y--) {
             for (int x = 0; x < cols; x++) {
                 ImageLineHelper.setPixelRGBA8(line, x, image[y][x][0], image[y][x][1], image[y][x][2], image[y][x][3]);
             }

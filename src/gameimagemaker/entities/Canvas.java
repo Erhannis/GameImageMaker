@@ -25,8 +25,8 @@ public class Canvas extends Entity {
     }
     
     public void drawEntity(Entity e, int x, int y) {
-        for (int j = 0; j < e.rows && j+y < rows; j++) {
-            for (int i = 0; i < e.cols && i+x < cols; i++) {
+        for (int j = 0; j < e.rows && j+y < rows && j+y >= 0; j++) {
+            for (int i = 0; i < e.cols && i+x < cols && i+x >= 0; i++) {
                 double a = (buf[j+y][i+x][3] / 255.0);
                 double b = (e.buf[j][i][3] / 255.0);
                 buf[j+y][i+x][0] = (int)(((1-b)*buf[j+y][i+x][0]) + (b*e.buf[j][i][0]));
@@ -38,8 +38,8 @@ public class Canvas extends Entity {
     }
     
     public void setEntity(Entity e, int x, int y) {
-        for (int j = 0; j < e.rows && j+y < rows; j++) {
-            for (int i = 0; i < e.cols && i+x < cols; i++) {
+        for (int j = 0; j < e.rows && j+y < rows && j+y >= 0; j++) {
+            for (int i = 0; i < e.cols && i+x < cols && i+x >= 0; i++) {
                 buf[j+y][i+x][0] = e.buf[j][i][0];
                 buf[j+y][i+x][1] = e.buf[j][i][1];
                 buf[j+y][i+x][2] = e.buf[j][i][2];

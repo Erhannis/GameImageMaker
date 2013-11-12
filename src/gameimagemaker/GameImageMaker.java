@@ -66,7 +66,7 @@ public class GameImageMaker {
      */
     public static void main(String[] args) {
         Random rand = new Random();
-        switch (4) {
+        switch (6) {
             case 0:
             {
                 int cols = 100;
@@ -151,10 +151,9 @@ public class GameImageMaker {
                 drop.addRing();
                 
                 canvas.drawFlatBackground(0x00, 0x20, 0x60, 0xFF);
-                canvas.drawEntity(drop, (ccols / 2) - (dcols / 2), (crows / 2) - (drows / 2));
 
-                int motes = 50;
-                int maxMoteSize = 10;
+                int motes = 100;
+                int maxMoteSize = 15;
                 for (int i = 0; i < motes; i++) {
                     int cols = rand.nextInt(maxMoteSize) + 1;
                     int rows = cols;
@@ -162,8 +161,131 @@ public class GameImageMaker {
                     mote.drawBase(rand.nextInt(0x100), rand.nextInt(0x100), rand.nextInt(0x100));
                     canvas.drawEntity(mote, rand.nextInt(crows), rand.nextInt(ccols));
                 }
+                
+                canvas.drawEntity(drop, (ccols / 2) - (dcols / 2), (crows / 2) - (drows / 2));
+                
                 InputStream is = canvas.generate();
                 GIMUtils.inputStreamToFile(is, "canvas-motes-w_drop.png");
+                break;
+            }
+            case 5:
+            {
+                int ccols = 1000;
+                int crows = 1000;
+                Canvas canvas = new Canvas(ccols, crows);
+
+                int dcols = 100;
+                int drows = 100;
+                Drop drop = new Drop(dcols, drows);
+                drop.drawBase((int) 0x10, (int) 0xD0, (int) 0x10);
+                drop.setRandBlue();
+                drop.addRing();
+                
+                canvas.drawFlatBackground(0x00, 0x20, 0x60, 0xFF);
+
+                int motes = 500;
+                int maxMoteSize = 5;
+                for (int i = 0; i < motes; i++) {
+                    int cols = rand.nextInt(maxMoteSize) + 1;
+                    int rows = cols;
+                    Mote mote = new Mote(cols, rows);
+                    mote.drawBase(rand.nextInt(0x100), rand.nextInt(0x100), rand.nextInt(0x100));
+                    canvas.drawEntity(mote, rand.nextInt(crows), rand.nextInt(ccols));
+                }
+
+                motes /= 2;
+                maxMoteSize *= 2;
+                for (int i = 0; i < motes; i++) {
+                    int cols = rand.nextInt(maxMoteSize) + 1;
+                    int rows = cols;
+                    Mote mote = new Mote(cols, rows);
+                    mote.drawBase(rand.nextInt(0x100), rand.nextInt(0x100), rand.nextInt(0x100));
+                    canvas.drawEntity(mote, rand.nextInt(crows), rand.nextInt(ccols));
+                }
+                
+                canvas.drawEntity(drop, (ccols / 2) - (dcols / 2), (crows / 2) - (drows / 2));
+
+                motes /= 2;
+                maxMoteSize *= 2;
+                for (int i = 0; i < motes; i++) {
+                    int cols = rand.nextInt(maxMoteSize) + 1;
+                    int rows = cols;
+                    Mote mote = new Mote(cols, rows);
+                    mote.drawBase(rand.nextInt(0x100), rand.nextInt(0x100), rand.nextInt(0x100));
+                    canvas.drawEntity(mote, rand.nextInt(crows), rand.nextInt(ccols));
+                }
+                
+                InputStream is = canvas.generate();
+                GIMUtils.inputStreamToFile(is, "canvas-motes_flurry-w_drop.png");
+                break;
+            }
+            case 6:
+            {
+                int ccols = 1000;
+                int crows = 1000;
+                Canvas canvasL = new Canvas(ccols, crows);
+                Canvas canvasR = new Canvas(ccols, crows);
+
+                int dcols = 100;
+                int drows = 100;
+                Drop drop = new Drop(dcols, drows);
+                drop.drawBase((int) 0x10, (int) 0xD0, (int) 0x10);
+                drop.setRandBlue();
+                drop.addRing();
+                
+                canvasL.drawFlatBackground(0x00, 0x20, 0x60, 0xFF);
+                canvasR.drawFlatBackground(0x00, 0x20, 0x60, 0xFF);
+
+                int motes = 500;
+                int maxMoteSize = 5;
+                int parallax = -20;
+                for (int i = 0; i < motes; i++) {
+                    int cols = rand.nextInt(maxMoteSize) + 1;
+                    int rows = cols;
+                    Mote mote = new Mote(cols, rows);
+                    mote.drawBase(rand.nextInt(0x100), rand.nextInt(0x100), rand.nextInt(0x100));
+                    int x = rand.nextInt(ccols);
+                    int y = rand.nextInt(crows);
+                    canvasL.drawEntity(mote, x + parallax, y);
+                    canvasR.drawEntity(mote, x, y);
+                }
+
+                motes /= 2;
+                maxMoteSize *= 2;
+                parallax += 10;
+                for (int i = 0; i < motes; i++) {
+                    int cols = rand.nextInt(maxMoteSize) + 1;
+                    int rows = cols;
+                    Mote mote = new Mote(cols, rows);
+                    mote.drawBase(rand.nextInt(0x100), rand.nextInt(0x100), rand.nextInt(0x100));
+                    int x = rand.nextInt(ccols);
+                    int y = rand.nextInt(crows);
+                    canvasL.drawEntity(mote, x + parallax, y);
+                    canvasR.drawEntity(mote, x, y);
+                }
+                
+                canvasL.drawEntity(drop, (ccols / 2) - (dcols / 2), (crows / 2) - (drows / 2));
+                canvasR.drawEntity(drop, (ccols / 2) - (dcols / 2), (crows / 2) - (drows / 2));
+
+                motes /= 2;
+                maxMoteSize *= 2;
+                parallax += 30;
+                for (int i = 0; i < motes; i++) {
+                    int cols = rand.nextInt(maxMoteSize) + 1;
+                    int rows = cols;
+                    Mote mote = new Mote(cols, rows);
+                    mote.drawBase(rand.nextInt(0x100), rand.nextInt(0x100), rand.nextInt(0x100));
+                    int x = rand.nextInt(ccols);
+                    int y = rand.nextInt(crows);
+                    canvasL.drawEntity(mote, x + parallax, y);
+                    canvasR.drawEntity(mote, x, y);
+                }
+                
+                InputStream is = canvasL.generate();
+                // Got 'em backwards.
+                GIMUtils.inputStreamToFile(is, "canvas-motes_flurry-w_drop-right.png");
+                is = canvasR.generate();
+                GIMUtils.inputStreamToFile(is, "canvas-motes_flurry-w_drop-left.png");
                 break;
             }
         }

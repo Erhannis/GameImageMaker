@@ -13,9 +13,17 @@ import mathnstuff.MeMath;
  *
  * @author mewer
  */
-public class Drop extends Entity {    
+public class Drop extends Entity {
+    /**
+     * Coordinates [y][x][x,y,z]
+     */
+    public double[][] heightMap;
+    public double[][][] normalMap;
+    
     public Drop(int cols, int rows) {
         super(cols, rows);
+        heightMap = new double[rows][cols];
+        normalMap = new double[rows][cols][3];
     }
     
     public void drawBase(int r, int g, int b) {
@@ -39,7 +47,34 @@ public class Drop extends Entity {
             }
         }
     }
+    
+    public void heightMapBase() {
+        double r2 = MeMath.sqr(Math.max(cols / 2.0, rows / 2.0));
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
+                double radius = Math.sqrt(MeMath.sqr(x - (cols / 2.0)) + MeMath.sqr(y - (rows / 2.0)));
+                radius /= Math.max(cols / 2.0, rows / 2.0);
+                if (radius >= 1) {
+                    heightMap[y][x] = 0;
+                } else {
+                    heightMap[y][x] = Math.sqrt(r2-MeMath.sqr(x)-MeMath.sqr(y));
+                }
+            }
+        }
+    }
 
+    /**
+     * Currently takes cross product of numerical partial derivatives h(x,y)/dx
+     * and h(x,y)/dy to find the normal vector.  h(x,y)/dx = h(x+1,y)-h(x,y).
+     */
+    public void deriveNormalMap() {
+        for (int y = 0; y < rows - 1; y++) {
+            for (int x = 0; x < cols - 1; x++) {
+                
+            }
+        }
+    }
+    
     public void setRandBlue() {
         Random rand = new Random();
         for (int y = 0; y < rows; y++) {

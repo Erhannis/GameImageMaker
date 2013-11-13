@@ -92,9 +92,10 @@ public class Drop extends Entity {
     }
     
     public void addSheen(double[] lightSource, double angle, int r, int g, int b, int a) {
+        double[] up = {0, 0, 1};
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
-                double theta = MeMath.vectorAngle(normalMap[y][x], lightSource);
+                double theta = MeMath.vectorAngle(MeMath.vectorReflect(up, normalMap[y][x]), lightSource);
                 if (theta <= angle) {
                     double a1 = buf[y][x][3] / 255.0;
                     double a2 = (a / 255.0) * Math.pow(1 - (theta / angle),0.8);
@@ -108,7 +109,9 @@ public class Drop extends Entity {
     }
     
     public void addSheen() {
-        addSheen(new double[]{-0.6,-0.4,1}, 0.5, 0xFF, 0xFF, 0xFF, 0x60);
+        for (double i = 0; i < 1; i += 0.1) {
+            addSheen(new double[]{-0.6,0.5 - i,0.4}, 0.5, 0xFF, 0xFF, 0xFF, 0x10);
+        }
         addSheen(new double[]{0.6,0.4,1}, 0.25, 0xFF, 0xFF, 0xFF, 0x40);
     }
     

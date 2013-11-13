@@ -86,7 +86,7 @@ public class Drop extends Entity {
                 normalMap[y][x][0] = -hx;
                 normalMap[y][x][1] = -hy;
                 normalMap[y][x][2] = 1;
-                MeMath.normalizeVectorIP(normalMap[y][x]);
+                MeMath.vectorNormalizeIP(normalMap[y][x]);
             }
         }
     }
@@ -109,14 +109,51 @@ public class Drop extends Entity {
     }
     
     public void addSheen() {
-        for (double i = 0; i < 1; i += 0.1) {
-            addSheen(new double[]{-0.6,0.5 - i,0.4}, 0.5, 0xFF, 0xFF, 0xFF, 0x10);
+        double[] u = {-1,0.3,0.2};
+        double[] v = {-0.5,-0.7,0.2};
+        for (double a = 0; a <= 1; a += 0.05) {
+            addSheen(MeMath.vectorAngleInterpolate(u, v, a), 0.5, 0xFF, 0xFF, 0xFF, 0x10);
         }
-        addSheen(new double[]{0.6,0.4,1}, 0.25, 0xFF, 0xFF, 0xFF, 0x40);
+        u[0] *= -1;
+        u[1] *= -1;
+        v[0] *= -1;
+        v[1] *= -1;
+        for (double a = 0; a <= 1; a += 0.05) {
+            addSheen(MeMath.vectorAngleInterpolate(u, v, a), 0.25, 0xFF, 0xFF, 0xFF, 0x15);
+        }
+    }
+    
+    public void addShadow() {
+        double[] u = {-1, 0.3, 0.2};
+        double[] v = {-0.5, -0.7, 0.2};
+        if (1 == 2) {
+            u[0] *= -1;
+            u[1] *= -1;
+            v[0] *= -1;
+            v[1] *= -1;
+            for (double a = 0; a <= 1; a += 0.05) {
+                addSheen(MeMath.vectorAngleInterpolate(u, v, a), Math.PI / 2.5, 0x00, 0x00, 0x00, 0x08);
+            }
+            u[2] *= -1;
+            v[2] *= -1;
+            for (double a = 0; a <= 1; a += 0.05) {
+                addSheen(MeMath.vectorAngleInterpolate(u, v, a), Math.PI / 2.5, 0x00, 0x00, 0x00, 0x08);
+            }
+        } else {
+            u[0] *= -1;
+            u[1] *= -1;
+            v[0] *= -1;
+            v[1] *= -1;
+            double[] w = MeMath.vectorAngleInterpolate(u, v, 0.5);
+            addSheen(w, Math.PI / 2, 0x00, 0x00, 0x00, 0x80);
+            w[2] *= -1;
+            addSheen(w, Math.PI / 2, 0x00, 0x00, 0x00, 0x80);
+        }
     }
     
     public void addReflectionRing() {
-        double maxAlpha = 0.5;
+        double[] color = {0xD0, 0xD0, 0xD0};
+        double maxAlpha = 0.7;
         double limit = 0.2;
         double offset = -0.00;
         for (int y = 0; y < buf.length; y++) {
@@ -125,9 +162,9 @@ public class Drop extends Entity {
                 radius /= Math.max(buf[y].length / 2.0, buf.length / 2.0);
                 if ((1 + offset - limit) <= radius && radius <= (1 + offset + limit)) {
                     double f = Math.abs((1 + offset - radius) / limit) * maxAlpha;
-                    buf[y][x][0] = (int)(((buf[y][x][0] * ((1 - maxAlpha) + f)) + (0xFF * (maxAlpha - f))) / 1);
-                    buf[y][x][1] = (int)(((buf[y][x][1] * ((1 - maxAlpha) + f)) + (0xFF * (maxAlpha - f))) / 1);
-                    buf[y][x][2] = (int)(((buf[y][x][2] * ((1 - maxAlpha) + f)) + (0xFF * (maxAlpha - f))) / 1);
+                    buf[y][x][0] = (int)(((buf[y][x][0] * ((1 - maxAlpha) + f)) + (color[0] * (maxAlpha - f))) / 1);
+                    buf[y][x][1] = (int)(((buf[y][x][1] * ((1 - maxAlpha) + f)) + (color[1] * (maxAlpha - f))) / 1);
+                    buf[y][x][2] = (int)(((buf[y][x][2] * ((1 - maxAlpha) + f)) + (color[2] * (maxAlpha - f))) / 1);
                 }
             }
         }
@@ -153,6 +190,18 @@ public class Drop extends Entity {
                     buf[y][x][0] *= Math.abs((1 + offset - radius) / limit);
                     buf[y][x][1] *= Math.abs((1 + offset - radius) / limit);
                     buf[y][x][2] *= Math.abs((1 + offset - radius) / limit);
+                }
+            }
+        }
+    }
+    
+    public void trim() {
+        for (int y = 0; y < buf.length; y++) {
+            for (int x = 0; x < buf[y].length; x++) {
+                double radius = Math.sqrt(MeMath.sqr(x - (buf[y].length / 2.0)) + MeMath.sqr(y - (buf.length / 2.0)));
+                radius /= Math.max(buf[y].length / 2.0, buf.length / 2.0);
+                if (radius >= 1) {
+                    buf[y][x][3] = 0;
                 }
             }
         }

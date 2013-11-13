@@ -9,6 +9,7 @@ import gameimagemaker.entities.Drop;
 import gameimagemaker.entities.Mote;
 import java.io.InputStream;
 import java.util.Random;
+import mathnstuff.MeMath;
 
 /**
  *
@@ -177,19 +178,29 @@ public class GameImageMaker {
                 int dcols = 100;
                 int drows = 100;
                 Drop drop = new Drop(dcols, drows);
+                drop.drawBase((int) 0xF0, (int) 0x10, (int) 0x10);
                 drop.drawBase((int) 0x10, (int) 0xF0, (int) 0x10);
+                //drop.drawBase((int) 0x10, (int) 0x10, (int) 0xF0);
+                //drop.drawBase((int) 0xF0, (int) 0xF0, (int) 0x10);
+                //drop.drawBase((int) 0x10, (int) 0xF0, (int) 0xF0);
+                //drop.drawBase((int) 0xF0, (int) 0x10, (int) 0xF0);
+                //drop.drawBase((int) 0xF0, (int) 0xF0, (int) 0xF0);
+                
                 //drop.drawBase((int) 0x00, (int) 0x00, (int) 0x00);
                 //drop.drawBase((int) 0xF0, (int) 0x10, (int) 0xF0);
                 drop.heightMapBase();
                 drop.deriveNormalMap();
                 //drop.setRandBlue();
+//                drop.addShadow();
                 drop.addReflectionRing();
                 drop.addSheen();
+                drop.addShadow();
                 drop.addRing();
+                drop.trim();
                 
                 canvas.drawFlatBackground(0x00, 0x20, 0x60, 0xFF);
 
-                int motes = 500;
+                int motes = 200;
                 int maxMoteSize = 5;
                 for (int i = 0; i < motes; i++) {
                     int cols = rand.nextInt(maxMoteSize) + 1;
@@ -307,6 +318,36 @@ public class GameImageMaker {
                 drop.addRing();
                 InputStream is = drop.generate();
                 GIMUtils.inputStreamToFile(is, "drop-green-w_sheen.png");
+                break;
+            }
+            case 8:
+            {
+                double[] u = {(rand.nextDouble() - 0.5) * 10, (rand.nextDouble() - 0.5) * 10};
+                double[] v = {(rand.nextDouble() - 0.5) * 10, (rand.nextDouble() - 0.5) * 10};
+                //double[] u = {1, 0};
+                //double[] v = {1, 1};
+                //MeMath.vectorNormalizeIP(u);
+                //MeMath.vectorNormalizeIP(v);
+                System.out.println("u: {" + u[0] + ", " + u[1] + "}");
+                System.out.println("v: {" + v[0] + ", " + v[1] + "}");
+                double theta = MeMath.vectorAngle(u, v);
+                System.out.println("u-v: " + theta);
+                double lastT = 0;
+                double[] lastW = {0, 0};
+                for (double alpha = 0; alpha <= 1; alpha += 0.1) {
+                    double[] w = MeMath.vectorAngleInterpolate(u, v, alpha);
+                    System.out.println("----");
+                    System.out.println("a: " + alpha);
+                    System.out.println("at: " + (alpha * theta));
+                    System.out.println("w: {" + w[0] + ", " + w[1] + "}");
+                    double[] dw = {w[0] - lastW[0], w[1] - lastW[1]};                    
+                    System.out.println("dw: {" + dw[0] + ", " + dw[1] + "} " + MeMath.vectorLength(dw));
+                    lastW = w;
+                    double thisT = MeMath.vectorAngle(u, w);
+                    System.out.println("u-w: " + thisT);
+                    System.out.println("dt: " + (thisT - lastT));
+                    lastT = thisT;
+                }
                 break;
             }
         }

@@ -8,6 +8,7 @@ import gameimagemaker.entities.Canvas;
 import gameimagemaker.entities.Drop;
 import gameimagemaker.entities.Mote;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.Random;
 import mathnstuff.MeMath;
 
@@ -16,58 +17,12 @@ import mathnstuff.MeMath;
  * @author mewer
  */
 public class GameImageMaker {
- /*
-    public InputStream generateTest(byte r, byte g, byte b, int cols, int rows) {
-        ImageInfo imi = new ImageInfo(cols, rows, 8, true); // 8 bits per channel, no alpha
-        // open image for writing to a output stream
-        QueueInputStream qis = new QueueInputStream();
-        QueueOutputStream qos = qis.dual;
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream("test-fos.png");
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(GameImageMaker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        PngWriter png = new PngWriter(qos, imi);
-        // add some optional metadata (chunks)
-        png.getMetadata().setDpi(100.0);
-        png.getMetadata().setTimeNow(0); // 0 seconds fron now = now
-        png.getMetadata().setText(PngChunkTextVar.KEY_Title, "just a text image");
-        png.getMetadata().setText("my key", "my text");
-        ImageLineInt iline = new ImageLineInt(imi);
-        for (int y = 0; y < imi.rows; y++) {
-        for (int x = 0; x < imi.cols; x++) { // this line will be written to all rows
-//            int r = 255;
-//            int g = 127;
-//            int b = 255 * col / imi.cols;
-                double radius = Math.sqrt(MeMath.sqr(x - (cols / 2.0)) + MeMath.sqr(y - (rows / 2.0)));
-                radius /= Math.max(cols / 2.0, rows / 2.0);
-                if (radius > 1) {
-                    radius = 0;
-                }
-                byte a = (byte)(0xFF * radius);
-            ImageLineHelper.setPixelRGBA8(iline, x, r, g, b, a); // orange-ish gradient
-        }
-            png.writeRow(iline);
-        }
-//        for (int row = 0; row < png.imgInfo.rows; row++) {
-//            png.writeRow(iline);
-//        }
-        png.end();
-        try {
-            qos.close();
-        } catch (IOException ex) {
-            Logger.getLogger(GameImageMaker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return qis;
-    }
-/**/
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         Random rand = new Random();
-        switch (5) {
+        switch (11) {
             case 0:
             {
                 int cols = 100;
@@ -348,6 +303,76 @@ public class GameImageMaker {
                     System.out.println("dt: " + (thisT - lastT));
                     lastT = thisT;
                 }
+                break;
+            }
+            case 9:
+            {
+                int dcols = 100;
+                int drows = 100;
+                Drop drop = new Drop(dcols, drows);
+                //drop.drawBase((int) 0xF0, (int) 0x10, (int) 0x10);
+                //drop.drawBase((int) 0x10, (int) 0xF0, (int) 0x10);
+                //drop.drawBase((int) 0x10, (int) 0x10, (int) 0xF0);
+                //drop.drawBase((int) 0xF0, (int) 0xF0, (int) 0x10);
+                //drop.drawBase((int) 0x10, (int) 0xF0, (int) 0xF0);
+                //drop.drawBase((int) 0xF0, (int) 0x10, (int) 0xF0);
+                //drop.drawBase((int) 0xF0, (int) 0xF0, (int) 0xF0);
+                
+                drop.drawBase((int) 0x00, (int) 0x00, (int) 0x00);
+                //drop.drawBase((int) 0xF0, (int) 0x10, (int) 0xF0);
+                drop.heightMapBase();
+                drop.deriveNormalMap();
+                //drop.setRandBlue();
+//                drop.addShadow();
+                drop.addReflectionRing();
+                drop.addSheen();
+                drop.addShadow();
+                drop.addRing();
+                drop.trim();
+                InputStream is = drop.generate();
+                GIMUtils.inputStreamToFile(is, "drop-9-black.png");
+                //GIMUtils.inputStreamToFile(is, "drop-9-black-2x.png");
+                break;
+            }
+            case 10:
+            {
+                // make icons
+                int[] dropColor = {0x10, 0xF0, 0x10};
+                //int[] canvasColor = {0x00, 0x20, 0x60, 0xFF};
+                int[] canvasColor = {0x00, 0x90, 0xD0, 0xFF};
+                
+                int[] sizes = {29, 40, 58, 76, 80, 120, 152};
+                
+                for (int s : sizes) {
+                    int dcols = s;
+                    int drows = s;
+                    Drop drop = new Drop(dcols, drows);
+                    drop.drawBase(dropColor[0], dropColor[1], dropColor[2]);
+                    drop.heightMapBase();
+                    drop.deriveNormalMap();
+                    drop.addReflectionRing();
+                    drop.addSheen();
+                    drop.addShadow();
+                    if (s != 29) {
+                        drop.addRing();
+                    }
+                    drop.trim();
+                    Canvas canvas = new Canvas(dcols, drows);
+                    canvas.drawFlatBackground(canvasColor[0], canvasColor[1], canvasColor[2], canvasColor[3]);
+                    canvas.drawEntity(drop, 0, 0);
+                    InputStream is = canvas.generate();
+                    GIMUtils.inputStreamToFile(is, "drop-icon-" + s + ".png");
+                }
+                break;
+            }
+            case 11:
+            {
+                int cols = 40;
+                int rows = 40;
+                Mote mote = new Mote(cols, rows);
+                mote.drawBase(0xFF, 0xFF, 0xFF);
+                InputStream is = mote.generate();
+                GIMUtils.inputStreamToFile(is, "mote-white.png");
                 break;
             }
         }

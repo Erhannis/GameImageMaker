@@ -1,0 +1,9 @@
+I made this program to make the graphics for Sheen (https://github.com/Erhannis/Sheen).  I release this under the Apache License 2.0.  Go forth.
+
+This program was written much more for internal use, so it's much scribblier than Sheen.
+
+It uses PngJ for generating png files.
+
+Dang, I suddenly realized that it also uses one of my other internal libraries.  I guess I'll have to put that up, too.  It'll probably be found at https://github.com/Erhannis/MathNStuff.
+
+-Erhannis
